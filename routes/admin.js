@@ -1,18 +1,14 @@
 const { Router }= require("express");
-
 const { adminModel }= require("../db");
+const { signupHandler, signinHander, Model} = require("../signup-auth");
 
 const adminRouter= Router();
+userRouter.use(express.json());
 
-adminRouter.post("/signup", (req, res)=>{
-    res.json({
-        message : "you are signed in"
-    })
-});
 
-adminRouter.post("/signin", (req, res)=>{
-    
-});
+adminRouter.post("/signup",Model("Admin"), signupHandler);
+
+adminRouter.post("/signin", Model("Admin"), signinHander);
 
 adminRouter.post("/add-course", (req,res)=>{
 

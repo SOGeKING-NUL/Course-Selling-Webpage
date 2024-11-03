@@ -9,9 +9,9 @@ const userRouter= Router();
 userRouter.use(express.json());
 
 
-userRouter.post("/signup",Model("Admin"),signupHandler);
+userRouter.post("/signup",Model("User"), signupHandler);
 
-userRouter.post("/signin", signinHander);
+userRouter.post("/signin", Model("User"), signinHander);
 
 userRouter.get("/courses/purchased", (req, res)=>{
     

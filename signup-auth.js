@@ -7,6 +7,9 @@ JWT_SECRET= "IlovetoSing";
 const{ userModel }= require("./db");
 const{ adminModel }= require("./db");
 
+
+
+
 const Model= (model)=>{
     return (req,res,next)=>{
         try{
@@ -31,7 +34,6 @@ const Model= (model)=>{
         }
     }
 };
-
 
 const signupHandler= async (req,res)=>{
     
@@ -77,28 +79,42 @@ const signupHandler= async (req,res)=>{
 };
 
 const signinHander= async (req,res)=>{
-    const email= req.body.email;
-    const password= req.body.password;
 
-    const user_found= await req.model.findOne({
-        email
-    });
+    try{
+        const email= req.body.email;
+        const password= req.body.password;
 
-    if(!user_found){
+        const user_found= await req.model.findOne({
+            email
+        });
+
+        if(!user_found){
+            res.json({
+                message : "User is not signed up"
+            })
+        }
+
+        password_matched= await bcrypt.compare(password, user_found.password);
+        if(!password_matched){
+            res.json({
+                message : "Wrong Password"
+            })
+        }
+
+        const token= jwt.sign({
+            userId: user_found._id   
+        }, JWT_SECRET);
+        
         res.json({
-            message : "User is not signed up"
-        })
+            message: "you are now signed in",
+            token
+        });
     }
-
-    password_matched= await bcrypt.compare(password, user_found.password);
-    if(!password_matched){
+    catch(e){
         res.json({
-            message : "Wrong Password"
-        })
-    }
-
-    
-
+            message : "An error occurred while signing you in"
+        });
+    };
 };
 
 module.exports={
