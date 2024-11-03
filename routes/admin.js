@@ -1,8 +1,9 @@
 const { Message } = require("@solana/web3.js");
 const { Router }= require("express");
 
-const adminRouter= Router();
+const { adminModel }= require("../db");
 
+const adminRouter= Router();
 
 adminRouter.post("/signup", (req, res)=>{
     res.json({
