@@ -1,21 +1,17 @@
 // const express= require("express");
 // const router- express.Router;
 
-const { Message } = require("@solana/web3.js");
 const { Router }= require("express");
+const{ userModel }= require("../db");
+const { signupHandler, signinHander, Model} = require("../signup-auth");
 
 const userRouter= Router();
+userRouter.use(express.json());
 
 
-userRouter.post("/signup", (req, res)=>{
-    res.json({
-        Message : "you are signed in"
-    })
-});
+userRouter.post("/signup",Model("Admin"),signupHandler);
 
-userRouter.post("/signin", (req, res)=>{
-    
-});
+userRouter.post("/signin", signinHander);
 
 userRouter.get("/courses/purchased", (req, res)=>{
     

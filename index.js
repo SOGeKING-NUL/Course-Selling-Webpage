@@ -11,5 +11,9 @@ app.use("/user", userRouter);
 app.use("/admin", adminRouter);
 app.use("/course", courseRouter);
 
+async function main(){
+    await mongoose.connect("mongodb+srv://UtsavJana:7aviMv781KbprmKp@cluster0.s4bwq.mongodb.net/course-selling")
+    app.listen(3000, ()=> console.log("listening on port 3000"));
+};
 
-app.listen(3000, ()=> console.log("listening on port 3000"));
+main();
