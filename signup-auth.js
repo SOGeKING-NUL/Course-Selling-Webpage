@@ -2,11 +2,10 @@ const { z } = require("zod");
 const bcrypt= require("bcrypt");
 const jwt= require("jsonwebtoken");
 
-JWT_SECRET= "IlovetoSing";
+const {ADMIN_JWT_SECRET, USER_JWT_SECRET}= require("./config")
 
 const{ userModel }= require("./db");
 const{ adminModel }= require("./db");
-
 
 
 
@@ -15,9 +14,11 @@ const Model= (model)=>{
         try{
             if(model== "Admin"){
             req.model= adminModel;
+            req.secret= ADMIN_JWT_SECRET;
             }
             else if(model=='User'){
                 req.model=userModel;
+                req.secret= USER_JWT_SECRET;
             }
             else{
                 res.json({
@@ -103,7 +104,7 @@ const signinHander= async (req,res)=>{
 
         const token= jwt.sign({
             userId: user_found._id   
-        }, JWT_SECRET);
+        }, req.secret);
         
         res.json({
             message: "you are now signed in",
@@ -117,8 +118,34 @@ const signinHander= async (req,res)=>{
     };
 };
 
+function auth(req, res, next){
+
+    const token= req.headers.token;
+    
+    if(token){
+        jwt_verified= jwt.verify(token, req.secret);
+        if(jwt_verified){
+            req.userId= jwt_verified.id;   //can be used to get the object Id to refence in the todo
+            console.log(req.userId) 
+            next()
+        }
+        else{
+            res.json({
+                message : "you are not logged in"
+            })
+        }
+    }
+    else{
+        res.json({
+            message: 'token not given'
+        });
+    }
+
+};
+
 module.exports={
     signupHandler,
     signinHander,
-    Model
+    Model,
+    auth
 }

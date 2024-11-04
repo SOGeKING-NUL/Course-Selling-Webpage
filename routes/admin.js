@@ -3,7 +3,7 @@ const { adminModel }= require("../db");
 const { signupHandler, signinHander, Model} = require("../signup-auth");
 
 const adminRouter= Router();
-userRouter.use(express.json());
+adminRouter.use(express.json());
 
 
 adminRouter.post("/signup",Model("Admin"), signupHandler);
