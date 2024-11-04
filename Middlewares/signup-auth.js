@@ -2,10 +2,10 @@ const { z } = require("zod");
 const bcrypt= require("bcrypt");
 const jwt= require("jsonwebtoken");
 
-const {ADMIN_JWT_SECRET, USER_JWT_SECRET}= require("./config")
+const {ADMIN_JWT_SECRET, USER_JWT_SECRET}= require("../config")
 
-const{ userModel }= require("./db");
-const{ adminModel }= require("./db");
+const{ userModel }= require("../db");
+const{ adminModel }= require("../db");
 
 
 
@@ -103,11 +103,13 @@ const signinHander= async (req,res)=>{
         }
 
         const token= jwt.sign({
-            userId: user_found._id   
+            _id: user_found._id   
         }, req.secret);
         
+        const privilege= req.model === userModel? "user" : "admin"; //this is like a whole if else statement in a single line of code
         res.json({
             message: "you are now signed in",
+            privilege,
             token
         });
     }
@@ -123,10 +125,10 @@ function auth(req, res, next){
     const token= req.headers.token;
     
     if(token){
-        jwt_verified= jwt.verify(token, req.secret);
+        const jwt_verified= jwt.verify(token, req.secret);
         if(jwt_verified){
-            req.userId= jwt_verified.id;   //can be used to get the object Id to refence in the todo
-            console.log(req.userId) 
+            req._id= jwt_verified._id;   //can be used to get the object Id to refence in the todo
+            console.log(req._id) 
             next()
         }
         else{
