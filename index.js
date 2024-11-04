@@ -1,6 +1,7 @@
 express= require("express");
 app= express();
 const mongoose= require("mongoose");
+require('dotenv').config();  //reads the .env files
 
 const{ userRouter } = require("./routes/user");
 const{ adminRouter } = require("./routes/admin");

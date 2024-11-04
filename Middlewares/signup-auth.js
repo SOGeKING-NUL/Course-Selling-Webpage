@@ -128,7 +128,6 @@ function auth(req, res, next){
         const jwt_verified= jwt.verify(token, req.secret);
         if(jwt_verified){
             req._id= jwt_verified._id;   //can be used to get the object Id to refence in the todo
-            console.log(req._id) 
             next()
         }
         else{
